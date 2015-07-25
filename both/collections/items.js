@@ -5,8 +5,34 @@ Items.attachSchema(new SimpleSchema({
         label: "Name",
         max: 200
     },
-    content: {
+    description: {
         type: String,
         label: "Description"
+    },
+    status: {
+        type: String,
+        label: "Status",
+        allowedValues: ['new', 'in design', 'ready for development', 'blocked', 'in development', 'ready for testing', 'in version'],
+        autoform: {
+            options: [
+                {label: "New", value: "new"},
+                {label: "In Design", value: "in design"},
+                {label: "Ready for Development", value: "ready for development"},
+                {label: "Blocked", value: "blocked"}
+            ]
+        }
+    },
+    userId: {
+        type: String,
+        label: "Title"
     }
 }));
+
+Items.allow({
+    insert: function(userId, doc){
+        return doc && doc.userId === userId;
+    },
+    update: function(userId, doc){
+        return doc && doc.userId === userId;
+    }
+})
