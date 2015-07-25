@@ -22,17 +22,21 @@ Items.attachSchema(new SimpleSchema({
             ]
         }
     },
-    userId: {
+    creatorID: {
         type: String,
         label: "Title"
+    },
+    tags: {
+        type: [String],
+        label: "Tags"
     }
 }));
 
 Items.allow({
     insert: function(userId, doc){
-        return doc && doc.userId === userId;
+        return doc && doc.creatorID === userId;
     },
     update: function(userId, doc){
-        return doc && doc.userId === userId;
+        return doc && doc.creatorID === userId;
     }
 })
