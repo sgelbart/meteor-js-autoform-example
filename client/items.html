@@ -1,0 +1,10 @@
+<template name="items">
+    <h1>Add Item</h1>
+    {{> quickForm collection="Items" id="insertItemsForm" type="insert"}}
+
+    <ul>
+        {{#each items}}
+            <li><a href="{{pathFor 'items.show'}}">{{name}}</a> - {{content}}</li>
+        {{/each}}
+    </ul>
+</template>
