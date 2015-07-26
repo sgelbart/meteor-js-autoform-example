@@ -7,7 +7,11 @@ Items.attachSchema(new SimpleSchema({
     },
     description: {
         type: String,
-        label: "Description"
+        label: "Description",
+        optional: true,
+        autoform: {
+            rows: 10
+        }
     },
     status: {
         type: String,
@@ -22,12 +26,39 @@ Items.attachSchema(new SimpleSchema({
             ]
         }
     },
+    assigneeId: {
+        type: String,
+        optional: true,
+        regEx: SimpleSchema.RegEx.Id,
+        autoform: {
+            type: "select",
+            options: function() {
+                return _.map(Meteor.users.find({}).fetch(), function(user) {
+                    return {
+                        label: user.profile.name,
+                        value: user._id
+                    };
+                });
+            }
+        }
+    },
     creatorID: {
         type: String,
-        label: "Title"
+        regEx: SimpleSchema.RegEx.Id,
+        autoform: {
+            type: "hidden",
+            label: false
+        },
+        autoValue: function () { return Meteor.userId() }
     },
     tags: {
         type: [String],
+        optional: true,
+        label: "Tags"
+    },
+    timelog: {
+        type: [String],
+        optional: true,
         label: "Tags"
     }
 }));
