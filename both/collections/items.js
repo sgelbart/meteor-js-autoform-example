@@ -16,15 +16,12 @@ Items.attachSchema(new SimpleSchema({
     status: {
         type: String,
         label: "Status",
-        allowedValues: ['new', 'in design', 'ready for development', 'blocked', 'in development', 'ready for testing', 'in version'],
+        allowedValues: ['new', 'In design', 'ready for development', 'blocked', 'in development', 'ready for testing', 'in version'],
         autoform: {
-            options: [
-                {label: "New", value: "new"},
-                {label: "In Design", value: "in design"},
-                {label: "Ready for Development", value: "ready for development"},
-                {label: "Blocked", value: "blocked"}
-            ]
-        }
+            options: "allowed",
+            capitalize: true
+        },
+        defaultValue: 'new'
     },
     assigneeId: {
         type: String,
@@ -51,15 +48,40 @@ Items.attachSchema(new SimpleSchema({
         },
         autoValue: function () { return Meteor.userId() }
     },
-    tags: {
-        type: [String],
-        optional: true,
-        label: "Tags"
-    },
+    //tags: {
+    //    type: [String],
+    //    optional: true,
+    //    label: "Tags"
+    //},
     timelog: {
-        type: [String],
+        type: Array,
         optional: true,
-        label: "Tags"
+        minCount: 0,
+        maxCount: 5
+    },
+    "timelog.$": {
+        type: Object
+    },
+    "timelog.$.creatorID": {
+        type: String,
+        regEx: SimpleSchema.RegEx.Id,
+        autoform: {
+            type: "hidden",
+            label: false
+        },
+        autoValue: function () { return Meteor.userId() }
+    },
+    "timelog.$.amount": {
+        type: String
+    },
+    "timelog.$.date": {
+        type: String,
+        optional: true,
+        autoform: {
+            afFieldInput: {
+                type: "bootstrap-datepicker"
+            }
+        }
     }
 }));
 
@@ -70,4 +92,18 @@ Items.allow({
     update: function(userId, doc){
         return doc && doc.creatorID === userId;
     }
-})
+});
+
+TabularTables = {};
+
+Meteor.isClient && Template.registerHelper('TabularTables', TabularTables);
+
+TabularTables.Items = new Tabular.Table({
+    name: "ItemList",
+    collection: Items,
+    columns: [
+        {data: "name", title: "Name"},
+        {data: "creatorId", title: "Creator"},
+        {data: "description", title: "Description"}
+    ]
+});
