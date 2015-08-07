@@ -94,16 +94,25 @@ Items.allow({
     }
 });
 
+Items.helpers({
+    creatorName: function () {
+        var user = Meteor.users.findOne({_id: this.creatorID});
+        return user && user.profile.name;
+    }
+});
+
 TabularTables = {};
 
 Meteor.isClient && Template.registerHelper('TabularTables', TabularTables);
 
 TabularTables.Items = new Tabular.Table({
     name: "ItemList",
+    //pub: "itemsWithCreator",
     collection: Items,
     columns: [
         {data: "name", title: "Name"},
-        {data: "creatorId", title: "Creator"},
-        {data: "description", title: "Description"}
+        {data: "description", title: "Description"},
+        {data: "creatorID", title: "test"},
+        {data: "creatorName()",title: "Creator"},
     ]
 });

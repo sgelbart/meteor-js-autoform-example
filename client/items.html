@@ -1,4 +1,7 @@
 <template name="items">
+    {{#each items}}
+        <p>{{name}}: {{creatorID}}</p>
+    {{/each}}
     <h1>Add Item</h1>
     <div class="row">
         <div class="col-sm-6">
