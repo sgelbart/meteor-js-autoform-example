@@ -1,4 +1,5 @@
 Items = new Mongo.Collection("items");
+
 Items.attachSchema(new SimpleSchema({
     name: {
         type: String,
@@ -98,6 +99,10 @@ Items.helpers({
     creatorName: function () {
         var user = Meteor.users.findOne({_id: this.creatorID});
         return user && user.profile.name;
+    },
+    assigneeName: function () {
+        var user = Meteor.users.findOne({_id: this.assigneeId});
+        return user && user.profile.name;
     }
 });
 
@@ -111,8 +116,14 @@ TabularTables.Items = new Tabular.Table({
     collection: Items,
     columns: [
         {data: "name", title: "Name"},
-        {data: "description", title: "Description"},
-        {data: "creatorID", title: "test"},
-        {data: "creatorName()",title: "Creator"},
-    ]
+        //{data: "description", title: "Description"},
+        //{data: "creatorID", title: "test"},
+        {data: "assigneeName()",title: "Assignee"},
+        {data: "status", title: "Status"},
+        {
+            tmpl: Meteor.isClient && Template.itemTableLink
+        }
+    ],
+    extraFields: ['creatorID','assigneeId'] //tabular is auto publishing the defined columns (and nothing else), this adds it
+
 });
